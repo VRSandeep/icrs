@@ -124,8 +124,7 @@ $('#cregister_form').submit(function(e) {
             Redirect('/candidate/');
         },
         error: function(xhr, ajaxOptions, thrownError) {
-            // lolz
-            alert('Incorrect Input. Please check if the input entered is correct; If everything is fine, then username is taken :(');
+            $('#register_errors').text(xhr.responseText);
         },
     });
 });

@@ -9,19 +9,40 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
-from .forms import CandidateRegistrationForm
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from .forms import UserRegisterSerializer
 
 
-def register_candidate(request):
-    if request.POST:
-        form = CandidateRegistrationForm(request.POST)     # create form object
-        if form.is_valid():
-            user = form.save()
-            auth_login(request, user)
-            return HttpResponse(status=201)
-        return HttpResponse(form.errors, status=400)
-    else:
-        return HttpResponse(status=405)
+class Register(generics.GenericAPIView):
+    """
+    Creates User Account
+
+    Returns: SESSION cookie on success and 201 status; Errors and 4xx status code on failure
+    """
+
+    permission_classes = (AllowAny,)
+    serializer_class = UserRegisterSerializer
+    allowed_methods = ('POST', 'OPTIONS', 'HEAD')
+
+    def post_register(self):
+        auth_login(self.request, self.user)
+
+    def get_response(self):
+        return Response(status=status.HTTP_201_CREATED)
+
+    def get_error_response(self):
+        return Response(self.serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, *args, **kwargs):
+        self.serializer = self.get_serializer(data=self.request.data)
+        if not self.serializer.is_valid():
+            return self.get_error_response()
+
+        self.user = self.serializer.save()
+        self.post_register()
+        return self.get_response()
 
 
 @sensitive_post_parameters()
