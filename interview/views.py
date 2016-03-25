@@ -34,11 +34,13 @@ class RatingCreateUpdate(generics.GenericAPIView):
     allowed_methods = ('POST',)
 
     def post(self, request, *args, **kwargs):
-        # request.data['interviewer'] = request.user
         request_data_cpy = request.data.copy()
         request_data_cpy['interviewer'] = request.user.id
         serializer = RatingSerializer(data=request_data_cpy)
         if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
             try:
                 # Allow Update only before all interviewers voted?
                 cr = CandidateRating.objects.get(interviewer=request.user, candidate__id=request.data['candidate'])
@@ -46,8 +48,7 @@ class RatingCreateUpdate(generics.GenericAPIView):
                 cr.save()
                 return Response(status=status.HTTP_200_OK)
             except CandidateRating.DoesNotExist:
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
+                pass
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
