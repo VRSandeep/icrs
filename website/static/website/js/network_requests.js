@@ -103,7 +103,7 @@ $('#rlogin_form').submit(function(e) {
         },
         error: function(xhr, ajaxOptions, thrownError) {
             // lolz
-            alert('Invalid username or password');
+            $('#login_errors').text(xhr.responseText);
         },
     });
 });

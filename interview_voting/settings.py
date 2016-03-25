@@ -134,6 +134,9 @@ STATIC_ROOT = BASE_DIR + '/static'
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/accounts/staff_login/'
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 604800 # One Week
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.

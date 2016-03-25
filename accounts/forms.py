@@ -69,3 +69,26 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         self.user = authenticate(username=self.user.username, password=self.validated_data['password'])
         self.user.save()
         return self.user
+
+
+class StaffUserLoginSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('password',)
+        read_only_fields = ('is_admin', 'is_staff')
+
+    def __init__(self, *args, **kwargs):
+        super(StaffUserLoginSerializer, self).__init__(*args, **kwargs)
+        self.fields[User.USERNAME_FIELD] = get_username_field()
+
+    def validate(self, attrs):
+        self.user = authenticate(username=attrs[User.USERNAME_FIELD], password=attrs['password'])
+        if self.user:
+            if not self.user.is_active:
+                raise serializers.ValidationError('Account is disabled')
+            if not self.user.is_staff:
+                raise serializers.ValidationError('Access Denied')
+            return attrs
+        else:
+            raise serializers.ValidationError('Invalid username or password')

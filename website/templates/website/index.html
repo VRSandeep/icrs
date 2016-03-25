@@ -63,7 +63,7 @@
                     </li>
                     {% else %}
                     <li>
-                        <a class="page-scroll" href="{%if user.is_staff%}/interviewer/{%else%}/candidate/{%endif%}">
+                        <a class="page-scroll" href="{% if user.is_staff %}/interviewer/{%else%}/candidate/{%endif%}">
                         {% if user.first_name %} {{ user.first_name }} {% if user.last_name %}{{ user.last_name }}{% endif %}{% else %}{{ user.get_username}}{% endif %}
                         </a>
                     </li>
@@ -130,6 +130,7 @@
                   <input name="password" type="password" placeholder="Password">
                   <input type="submit" class="login loginmodal-submit" value="Login">
               </form>
+              <label id="login_errors"></label>
             </div>
         </div>
     </div>

@@ -7,6 +7,6 @@ from accounts import views, forms
 
 urlpatterns = [
     url(r'^logout/$', auth_views.logout),
-    url(r'^login/staff/$', views.login_staff, name='login_staff'),
+    url(r'^login/staff/$', views.StaffLogin.as_view(), name='login_staff'),
     url(r'^register/candidate/$', views.Register.as_view(), name='register_candidate'),
 ]

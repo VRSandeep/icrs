@@ -7,7 +7,6 @@ from rest_framework import serializers, generics, status
 from .models import CandidateRating
 
 
-# Serializers define the API representation.
 class RatingSerializer(serializers.ModelSerializer):
 
     candidate = serializers.PrimaryKeyRelatedField(queryset=User.objects.filter(is_staff=False))
@@ -52,14 +51,10 @@ class RatingCreateUpdate(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def get_previous_candidates(request):
-    """
-    Loads Candidate Ratings
-    """
-    from django.db.models import Avg
+def aggregate_candidate_results(candidates, user):
 
+    from django.db.models import Avg
     staff_size = User.objects.filter(is_staff=True).count()
-    candidates = User.objects.filter(is_staff=False).order_by('date_joined')[:50]
 
     candidate_ratings=[]
     for candidate in candidates:
@@ -71,15 +66,38 @@ def get_previous_candidates(request):
         if rating.count() == staff_size:
 
             s['rating'] = rating.aggregate(Avg('rating')).values()[0]
-            s['my_rating'] = rating.filter(interviewer=request.user)[0]
+            s['my_rating'] = rating.filter(interviewer=user)[0]
         else:
 
             # Don't load avg if all interviewers haven't finished rating candidate
             s['rating'] = 'NA'
-            r = rating.filter(interviewer=request.user)
+            r = rating.filter(interviewer=user)
             if r:
                 s['my_rating'] = r[0]
             else:
                 s['my_rating'] = 'NA'
         candidate_ratings.append(s)
     return candidate_ratings
+
+
+def get_previous_candidates(request):
+    """
+    Loads Candidate Ratings
+    """
+
+    candidates = User.objects.filter(is_staff=False).order_by('date_joined')[:50]
+    return aggregate_candidate_results(candidates, request.user)
+
+
+def search_candidates(query, request):
+    from django.db.models import Q
+    candidates = User.objects.filter(
+        Q(username__icontains=query) |
+        Q(first_name__icontains=query) |
+        Q(email__icontains=query) |
+        Q(last_name__icontains=query)
+    ).filter(is_staff=False).order_by('date_joined')[:50]
+    if candidates:
+        return aggregate_candidate_results(candidates, request.user)
+    else:
+        return None
