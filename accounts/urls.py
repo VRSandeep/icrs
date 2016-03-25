@@ -21,5 +21,6 @@ urlpatterns = [
         'template_name': 'accounts/login.html',
         'redirect_field_name': settings.LOGIN_URL
     }, name='login'),
+    url(r'^login/staff/$', views.login_staff, name='login_staff'),
     url(r'^register/candidate/$', views.register_candidate, name='register_candidate'),
 ]

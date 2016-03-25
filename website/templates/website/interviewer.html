@@ -1,0 +1,71 @@
+{% extends 'website/index.html' %} {% load static %}
+{% block page_css %}
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+
+<!-- Load all candidates -->
+
+<header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+
+                        <table class="table" id="candidates">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>First Name</th>
+                              <th>Last Name</th>
+                              <th>Username</th>
+                              <th>My Rating</th>
+                              <th>Avg. Rating</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for c in candidates %}
+                            <tr>
+                              <th scope="row">{{forloop.counter0}}</th>
+                              <td>{{c.candidate.first_name}}</td>
+                              <td>{{c.candidate.last_name}}</td>
+                              <td>{{c.candidate.username}}</td>
+                              {% if c.rating == 'NA' %}
+                              <td><a href="#" data-name="my_rating" data-pk="{{c.candidate.id}}">{{c.my_rating}}</a></td>
+                              {% else %}
+                              <td>{{c.my_rating}}</td>
+                              {% endif %}
+                              <!-- TODO: Hot reload -->
+                              <td>{{c.rating}}</td>
+                            </tr>
+                            {% endfor %}
+
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+{% endblock %}
+
+{% block page_scripts %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script type="text/javascript">
+    $('#candidates a').editable({
+        type: 'text',
+        name: 'my_rating',
+        url: '/voting/rating/add/',
+        title: 'Enter your rating',
+        params: function(params) {
+            // http://vitalets.github.io/x-editable/faq.html
+            var data = {};
+            data['candidate'] = params.pk;
+            data['rating'] = params.value;
+            return data;
+        }
+    });
+</script>
+{% endblock %}
