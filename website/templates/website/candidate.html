@@ -1,0 +1,27 @@
+{% extends 'website/index.html' %} {% load static %}
+{% block page_css %}
+<style type="text/css">
+    .intro {
+        background: url({% static 'website/img/250H.jpg' %}) no-repeat;
+        background-size: cover;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="intro">
+    <div class="intro-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <!-- <h1 class="brand-heading"></h1> -->
+                    <p class="intro-text">Thank you for applying</p>
+                    <!--a href="#about" class="btn btn-circle page-scroll">
+                        <i class="fa fa-angle-double-down animated"></i>
+                    </a-->
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}

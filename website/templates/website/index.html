@@ -58,9 +58,9 @@
                     <li>
                         <a class="page-scroll" href="#" data-toggle="modal" data-target="#recruiter-login-modal">Recruiter Login</a>
                     </li>
-                    <!-- <li>
+                    <li>
                         <a class="page-scroll" href="#" data-toggle="modal" data-target="#candidate-register-modal">Candidate Register</a>
-                    </li> -->
+                    </li>
                     {% else %}
                     <li>
                         <a class="page-scroll" href="{%if user.is_staff%}/interviewer/{%else%}#{%endif%}">
@@ -98,22 +98,27 @@
     {% endblock %}
 
 
-    <!-- <div class="modal fade" id="candidate-register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal fade" id="candidate-register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="loginmodal-container">
-                <h1>Login to Your Account</h1><br>
-              <form>
-                <input type="text" name="user" placeholder="Username">
-                <input type="password" name="pass" placeholder="Password">
+                <h1>Candidate Register</h1><br>
+              <form method="post" action="{% url 'register_candidate' %}" id="cregister_form">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username">
+                <input type="text" name="first_name" placeholder="First Name">
+                <input type="text" name="last_name" placeholder="Last Name">
+                <input type="password" name="password1" placeholder="Password">
+                <input type="password" name="password2" placeholder="Repeat Password">
+                <input type="email" name="email" placeholder="Email">
                 <input type="submit" name="login" class="login loginmodal-submit" value="Login">
               </form>
 
-              <div class="login-help">
+              <!-- <div class="login-help">
                 <a href="#">Register</a> - <a href="#">Forgot Password</a>
-              </div>
+              </div> -->
             </div>
         </div>
-    </div> -->
+    </div>
 
     <div class="modal fade" id="recruiter-login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">

@@ -13,18 +13,15 @@ from .forms import CandidateRegistrationForm
 
 
 def register_candidate(request):
-    context = {}
     if request.POST:
         form = CandidateRegistrationForm(request.POST)     # create form object
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('register_candidate'))
-        context['form'] = form
+            user = form.save()
+            auth_login(request, user)
+            return HttpResponse(status=201)
+        return HttpResponse(form.errors, status=400)
     else:
-        context['form'] = CandidateRegistrationForm()
-    context.update(csrf(request))
-
-    return render(request, 'accounts/register.html', context)
+        return HttpResponse(status=405)
 
 
 @sensitive_post_parameters()

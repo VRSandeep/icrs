@@ -102,8 +102,30 @@ $('#rlogin_form').submit(function(e) {
             Redirect('/interviewer/');
         },
         error: function(xhr, ajaxOptions, thrownError) {
-            console.log(xhr, thrownError);
-            console.log('Failed');
+            // lolz
+            alert('Invalid username or password');
+        },
+    });
+});
+
+$('#cregister_form').submit(function(e) {
+
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: window.local_url + $(this).attr('action'),
+        data: $(this).serialize(),
+        xhrFields: {
+            withCredentials: true
+        },
+        success: function(response) {
+            console.log('success');
+            // location.reload();
+            Redirect('/candidate/');
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            // lolz
+            alert('Incorrect Input. Please check if the input entered is correct; If everything is fine, then username is taken :(');
         },
     });
 });

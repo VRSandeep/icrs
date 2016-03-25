@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template.context_processors import csrf
 from django.shortcuts import render_to_response
 from django.contrib.auth import get_user_model
@@ -36,3 +36,9 @@ def interviewer(request):
     # pp.pprint(context['candidates'])
 
     return render_to_response('website/interviewer.html', context)
+
+
+@login_required
+@user_passes_test(lambda u: not u.is_staff and not u.is_superuser)
+def candidate(request):
+    return render_to_response('website/candidate.html', populate_context(request))
