@@ -41,4 +41,5 @@ def interviewer(request):
 @login_required
 @user_passes_test(lambda u: not u.is_staff and not u.is_superuser)
 def candidate(request):
-    return render_to_response('website/candidate.html', populate_context(request))
+    context = populate_context(request)
+    return render_to_response('website/candidate.html', context)

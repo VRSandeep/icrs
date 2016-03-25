@@ -63,7 +63,7 @@
                     </li>
                     {% else %}
                     <li>
-                        <a class="page-scroll" href="{%if user.is_staff%}/interviewer/{%else%}#{%endif%}">
+                        <a class="page-scroll" href="{%if user.is_staff%}/interviewer/{%else%}/candidate/{%endif%}">
                         {% if user.first_name %} {{ user.first_name }} {% if user.last_name %}{{ user.last_name }}{% endif %}{% else %}{{ user.get_username}}{% endif %}
                         </a>
                     </li>
