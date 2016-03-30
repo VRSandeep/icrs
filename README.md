@@ -9,3 +9,6 @@ They don't want others opinion bias their own and thus they can see Average rati
 ## Installation
 
 This is a standard Django project. Please refer to Django [documentation](https://docs.djangoproject.com/en/1.9/intro/overview/#install-it) for more details.
+
+## Demo 
+You can check the demo [here](https://evening-tor-28971.herokuapp.com/)
